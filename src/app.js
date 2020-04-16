@@ -1,11 +1,15 @@
 import express from 'express';
-import routes from './routes/customerRouter'
+import routes from './routes/customerRouter';
 
 class App {
     constructor() {
         this.server = express();
-
         this.routes();
+        this.middlewares();
+    }
+
+    middlewares() {
+        this.server.use(express.json());
     }
 
     routes() {
