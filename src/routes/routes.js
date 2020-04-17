@@ -31,7 +31,7 @@ routes.put('/customers/:id', (req, res) => {
     const { name, age } = req.body;
     const { id } = req.params;
     const customerId = customers.findIndex(customer => {
-        return customer.id = id;
+        return customer.id === id;
     });
     customers[customerId] = new Customer(id, name, age);
 
@@ -39,7 +39,17 @@ routes.put('/customers/:id', (req, res) => {
         message: 'Customer updated',
         customerData: customers[customerId]
     });
+});
 
+routes.delete('/customers/:id', (req, res) => {
+    const { id } = req.params;
+    const customerId = customers.findIndex(customer => {
+        return customer.id === id;
+    });
+    customers.splice(customerId, 1);
+    return res.status(200).json({
+        message: 'Customer deleted'
+    });
 });
 
 export default routes;
