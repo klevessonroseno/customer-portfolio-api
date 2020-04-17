@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import Customer from '../models/Customer';
+import Purchase from '../models/Purchase';
 
 const customers = [];
 const routes = new Router();
@@ -14,7 +15,7 @@ routes.post('/customers', (req, res) => {
 
     return res.status(201).json({
         message: 'Customer created',
-        customerData: { id, name, age } 
+        customerData: customer 
     });
 });
 
@@ -49,6 +50,21 @@ routes.delete('/customers/:id', (req, res) => {
     customers.splice(customerId, 1);
     return res.status(200).json({
         message: 'Customer deleted'
+    });
+});
+
+routes.post('/customers/:id/purchases', (req, res) => {
+    const { id } = req.params;
+    const { name, price } = req.body;
+    const purchase = new Purchase(name, price);
+    const customerId = customers.findIndex(customer => {
+        return customer.id === id;
+    });
+    customers[customerId].purchases.push(purchase);
+
+    return res.status(201).json({
+        message: 'Purchase created',
+        purchase: customers[customerId].purchases
     });
 });
 
