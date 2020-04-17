@@ -1,5 +1,6 @@
 class Customer {
-    constructor(_name, _age) {
+    constructor(_id, _name, _age) {
+        this.id = _id;
         this.name = _name;
         this.age = _age;
     }
