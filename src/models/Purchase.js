@@ -1,6 +1,6 @@
 class Purchase {
-    constructor( _purchaseId, _name, _price) {
-        this.purchaseId = _purchaseId;
+    constructor(_name, _price) {
+        this.id = null;
         this.name = _name;
         this.price = _price;
     }
