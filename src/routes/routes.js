@@ -27,4 +27,19 @@ routes.get('/customers/:id', (req, res) => {
     return res.status(200).json(customer);
 });
 
+routes.put('/customers/:id', (req, res) => {
+    const { name, age } = req.body;
+    const { id } = req.params;
+    const customerId = customers.findIndex(customer => {
+        return customer.id = id;
+    });
+    customers[customerId] = new Customer(id, name, age);
+
+    return res.status(200).json({
+        message: 'Customer updated',
+        customerData: customers[customerId]
+    });
+
+});
+
 export default routes;
