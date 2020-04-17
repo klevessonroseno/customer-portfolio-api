@@ -55,8 +55,8 @@ routes.delete('/customers/:id', (req, res) => {
 
 routes.post('/customers/:id/purchases', (req, res) => {
     const { id } = req.params;
-    const { name, price } = req.body;
-    const purchase = new Purchase(name, price);
+    const { purchaseId, name, price } = req.body;
+    const purchase = new Purchase(purchaseId, name, price);
     const customerId = customers.findIndex(customer => {
         return customer.id === id;
     });
@@ -85,7 +85,7 @@ routes.put('/customers/:id/purchases', (req, res) => {
         return customer.id === id;
     });
     const purchases = customers[customerId].purchases;
-    
+
 });
 
 export default routes;
