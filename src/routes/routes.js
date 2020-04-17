@@ -68,4 +68,24 @@ routes.post('/customers/:id/purchases', (req, res) => {
     });
 });
 
+routes.get('/customers/:id/purchases', (req, res) => {
+    const { id } = req.params;
+    const customerId = customers.findIndex(customer => {
+        return customer.id === id;
+    });
+    const purchases = customers[customerId].purchases;
+
+    return res.status(200).json(purchases);
+});
+
+routes.put('/customers/:id/purchases', (req, res) => {
+    const { id } = req.params;
+    const { name, price } = req.body;
+    const customerId = customers.findIndex(customer => {
+        return customer.id === id;
+    });
+    const purchases = customers[customerId].purchases;
+    
+});
+
 export default routes;
