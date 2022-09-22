@@ -1,9 +1,14 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+
 module.exports = {
-    dialect: 'mysql',
-    host: 'localhost',
-    database: 'customer_portfolio',
-    username: 'root',
-    password: '',
+    dialect: process.env.DIALECT,
+    host: process.env.HOST,
+    database: process.env.DATABASE,
+    username: process.env.USERNAME,
+    password: process.env.PASSWORD,
     define: {
         timestamps: true,
         underscored: true,
