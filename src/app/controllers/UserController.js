@@ -10,14 +10,14 @@ class UserController{
                 password: Yup.string().required().min(6),
             });
 
-            if(!(await schema.isValid(req.body))){
-                return res.status(400).json({
-                    error: 'Validation Fails',
-                });
-            }
-        
+            if(!(await schema.isValid(req.body))) return res.status(400).json({
+                error: 'Validation Fails',
+            });
+            
             const userExists = await User.findOne({
-                where: { email: req.body.email }
+                where: { 
+                    email: req.body.email
+                },
             });
 
             if(userExists) return res.status(400).json({
@@ -36,7 +36,7 @@ class UserController{
     async update(req, res){
       try {
         const schema = Yup.object().shape({
-            name: Yup.string().required(),
+            name: Yup.string(),
             email: Yup.string().email(),
             oldPassword: Yup.string().min(6),
             password: Yup.string().min(6).when('oldPassword', (oldPassword, field) => {
@@ -53,6 +53,25 @@ class UserController{
             });
         }
 
+        const { name, email, oldPassword, password } = req.body;
+
+        const user = await User.findByPk(req.userId);
+
+        if(email !== user.email) {
+            const userExists = await User.findOne({
+                where: { email },
+            });
+
+            if(userExists) return res.status(400).json({
+                message: 'Email already registered by another user.',
+            });
+        }
+
+        if(oldPassword && !(await user.checkPassword(oldPassword))){
+            return res.status(401).json({
+                message: 'Incorrect password.',
+            });
+        }
 
 
       } catch (error) {

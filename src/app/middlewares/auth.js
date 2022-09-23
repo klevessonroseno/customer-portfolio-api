@@ -5,10 +5,22 @@ import authConfig from '../../config/auth';
 export default async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
-  if(!authHeader){
-    res.status(401).json({
+  if(!authHeader) return res.status(401).json({
       message: 'Token not provided.',
-    });
-  } 
-  return next();
+  });
+
+  const [ , token ] = authHeader.split(' ');
+
+  try {
+    const decoded = await promisify(jwt.verify)(token, authConfig.secret);
+
+    req.userId = decoded.id;
+
+    return next();
+
+  } catch (error) {
+    res.status(401).json({ message: 'Token invalid.' });
+
+    return next();
+  }
 }
