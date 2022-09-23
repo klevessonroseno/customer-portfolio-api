@@ -51,7 +51,6 @@ class SessionController {
       });
 
     } catch (error) {
-      console.log('Erro: ' + error);
       res.status(500).json({
         message: 'Something went wrong.'
       });

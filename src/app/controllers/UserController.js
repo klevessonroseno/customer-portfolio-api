@@ -32,6 +32,10 @@ class UserController{
             return res.status(500).json(error);
         }
     }
+
+    async update(req, res){
+
+    }
 }
 
 export default new UserController();
