@@ -33,8 +33,27 @@ class SessionController {
         });
       }
 
+      const { id, name } = user;
+
+      const [ firstName ] = name.split(' '); 
+
+      return res.status(200).json({
+        token: jwt.sign(
+          {
+            id,
+            firstName
+          },
+          authConfig.secret,
+          {
+            expiresIn: authConfig.expiresIn,
+          }
+        )
+      });
+
     } catch (error) {
-      
+      res.status(500).json({
+        message: 'Something went wrong.'
+      });
     }
   }
 }
