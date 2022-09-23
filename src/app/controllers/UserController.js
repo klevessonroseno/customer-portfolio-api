@@ -73,9 +73,14 @@ class UserController{
             });
         }
 
+        const userUpdated = await user.update(req.body);
+
+        return res.status(200).json(userUpdated);        
 
       } catch (error) {
-        
+        return res.status(500).json({
+            message: 'Something went wrong.'
+        });
       }  
     }
 }
