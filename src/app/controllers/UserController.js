@@ -46,7 +46,15 @@ class UserController{
                 return password ? field.required().oneOf([Yup.ref('password')]) : field
             }),
         });
+
+        if(!(await schema.isValid(req.body))){
+            return res.status(400).json({
+                message: 'Validation Fails.',
+            });
+        }
+
         
+
       } catch (error) {
         
       }  
