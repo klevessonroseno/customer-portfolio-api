@@ -34,54 +34,61 @@ class UserController{
     }
 
     async update(req, res){
-      try {
-        const schema = Yup.object().shape({
-            name: Yup.string(),
-            email: Yup.string().email(),
-            oldPassword: Yup.string().min(6),
-            password: Yup.string().min(6).when('oldPassword', (oldPassword, field) => {
-                return oldPassword ? field.required() : field
-            }),
-            confirmPassword: Yup.string().when('password', (password, field) => {
-                return password ? field.required().oneOf([Yup.ref('password')]) : field
-            }),
-        });
-
-        if(!(await schema.isValid(req.body))){
-            return res.status(400).json({
-                message: 'Validation Fails.',
-            });
-        }
-
-        const { name, email, oldPassword, password } = req.body;
-
-        const user = await User.findByPk(req.userId);
-
-        if(email !== user.email) {
-            const userExists = await User.findOne({
-                where: { email },
+        try {
+            const schema = Yup.object().shape({
+                name: Yup.string(),
+                email: Yup.string().email(),
+                oldPassword: Yup.string().min(6),
+                password: Yup.string().min(6).when('oldPassword', 
+                    (oldPassword, field) => {
+                        return oldPassword 
+                            ? field.required() 
+                            : field
+                    }
+                ),
+                confirmPassword: Yup.string().when('password', 
+                    (password, field) => {
+                        return password 
+                            ? field.required().oneOf([Yup.ref('password')]) 
+                            : field
+                    }
+                ),                
             });
 
-            if(userExists) return res.status(400).json({
-                message: 'Email already registered by another user.',
+            if(!(await schema.isValid(req.body))) return res.status(400).json({
+                error: 'Validation Fails'
             });
-        }
+            
+            const { email, oldPassword } = req.body;
+    
+            const user = await User.findByPk(req.userId);
+    
+            if(email && email !== user.email) {
+                const userExists = await User.findOne({
+                    where: { email },
+                });
+    
+                if(userExists) return res.status(400).json({
+                    message: 'Email already registered by another user.',
+                });
+            }
+    
+            if(oldPassword && !(await user.checkPassword(oldPassword))){
+                return res.status(401).json({
+                    message: 'Incorrect password.',
+                });
+            }
+    
+            const userUpdated = await user.update(req.body);
+            const userFound = await User.findByPk(req.userId);
+    
+            return res.status(200).json({ userUpdated, userFound });      
 
-        if(oldPassword && !(await user.checkPassword(oldPassword))){
-            return res.status(401).json({
-                message: 'Incorrect password.',
+        } catch (error) {
+            res.status(500).json({
+                message: 'Something went wrong.'
             });
-        }
-
-        const userUpdated = await user.update(req.body);
-
-        return res.status(200).json(userUpdated);        
-
-      } catch (error) {
-        return res.status(500).json({
-            message: 'Something went wrong.'
-        });
-      }  
+        }  
     }
 }
 
