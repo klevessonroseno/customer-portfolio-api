@@ -1,9 +1,17 @@
-class Customer {
-    constructor(_name, _age, _purchases = []) {
-        this.id = null;
-        this.name = _name;
-        this.age = _age;
-        this.purchases = _purchases;
+import Sequelize, { Model } from "sequelize";
+
+class Customer extends Model {
+    static init(connection){
+        super.init({
+            name: Sequelize.STRING,
+            email: Sequelize.STRING,
+            age:  Sequelize.INTEGER,
+            purchases: Sequelize.ARRAY(Sequelize.RANGE(Sequelize.STRING)),
+        }, {
+            sequelize: connection,
+        });
+        
+        return this;
     }
 }
 
