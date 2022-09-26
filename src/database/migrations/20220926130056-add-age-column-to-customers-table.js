@@ -4,11 +4,11 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.addColumn(
       'customers',
-      'email',
+      'age',
       {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        unique: false,
       }
     );
   },
