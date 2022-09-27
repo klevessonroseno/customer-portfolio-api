@@ -89,8 +89,39 @@ class CustomerController {
     }
   }
 
-  async getOne(req, res){
+  async getOneByEmail(req, res){
+    try {
+      const schema = await Yup.object().shape({
+        email: Yup.string().email().required(),
+      });
 
+      if(!(await schema.isValid(req.body))) return res.status(400).json({
+        message: 'Email is required.',
+      });
+
+      const customer = await Customer.findOne({
+        where: { 
+          email: req.body.email,
+        },
+      });
+
+      if(!customer) return res.status(404).json({
+        message: 'There is no customer registered with this email.',
+      });
+    
+      const { name, email, age } = customer;
+      
+      res.status(200).json({
+        name,
+        email,
+        age,
+      });
+
+    } catch (error) {
+      res.status(500).json({
+        message: 'Something went wrong.',
+      });
+    }
   }
 }
 
