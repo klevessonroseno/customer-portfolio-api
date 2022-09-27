@@ -108,7 +108,7 @@ class CustomerController {
       if(!customer) return res.status(404).json({
         message: 'There is no customer registered with this email.',
       });
-    
+      
       const { name, email, age } = customer;
       
       res.status(200).json({
@@ -118,6 +118,37 @@ class CustomerController {
       });
 
     } catch (error) {
+      res.status(500).json({
+        message: 'Something went wrong.',
+      });
+    }
+  }
+
+  async getAll(req, res){
+    try {
+      const { userId } = req;
+      let customers = await Customer.findAll({
+        where: {
+          user_id: userId,
+        },
+      });
+
+      customers = customers.map(({
+        id,
+        name,
+        email,
+      }) => {
+        return ({
+          id,
+          name,
+          email,
+        });
+      });
+
+      res.status(200).json(customers);
+
+    } catch (error) {
+      
       res.status(500).json({
         message: 'Something went wrong.',
       });

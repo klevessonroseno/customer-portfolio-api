@@ -22,4 +22,6 @@ routes.put('/users/customers', CustomerController.update);
 
 routes.get('/users/customer', CustomerController.getOneByEmail);
 
+routes.get('/users/customers', CustomerController.getAll);
+
 export default routes;
