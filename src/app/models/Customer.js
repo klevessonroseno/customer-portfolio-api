@@ -6,7 +6,7 @@ class Customer extends Model {
             name: Sequelize.STRING,
             email: Sequelize.STRING,
             age:  Sequelize.INTEGER,
-            purchases: Sequelize.ARRAY(Sequelize.RANGE(Sequelize.STRING)),
+            user_id: Sequelize.INTEGER,
         }, {
             sequelize: connection,
         });

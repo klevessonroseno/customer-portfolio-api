@@ -18,8 +18,18 @@ module.exports = {
           allowNull: false,
           unique: true,
         },
-        password_hash: {
-          type: Sequelize.STRING,
+        age: {
+          type: Sequelize.INTEGER,
+          allowNull: true,
+        },
+        user_id: {
+          type: Sequelize.INTEGER,
+          references: { 
+            model: 'users', 
+            key: 'id' 
+          },
+          onUpdate: 'CASCADE',
+          onDelete: 'SET NULL',
           allowNull: false,
         },
         created_at: {
@@ -31,11 +41,9 @@ module.exports = {
           allowNull: false,
         },
       });
-    
   },
 
   down: queryInterface => {
-      return queryInterface.dropTable('customers');
-    
+      return queryInterface.dropTable('customers');  
   }
 };

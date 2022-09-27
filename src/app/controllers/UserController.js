@@ -78,11 +78,10 @@ class UserController{
                     message: 'Incorrect password.',
                 });
             }
+            
+            await user.update(req.body);
     
-            const userUpdated = await user.update(req.body);
-            const userFound = await User.findByPk(req.userId);
-    
-            return res.status(200).json({ userUpdated, userFound });      
+            return res.status(204).json();
 
         } catch (error) {
             res.status(500).json({
