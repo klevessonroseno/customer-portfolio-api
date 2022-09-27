@@ -124,15 +124,45 @@ class CustomerController {
     }
   }
 
+  async getByFullName(req, res){
+    try {
+      const schema = await Yup.object().shape({
+        name: Yup.string().required,
+      });
+
+      if(!(await schema.isValid(req.body))) return res.status(400).json({
+        message: 'Validation fails.',
+      });
+
+      const customer = await Customer.findOne({
+        where: { 
+          name: req.body.name, 
+        },
+      });
+
+      const { name, email, age } = customer;
+
+      res.status(200).json({
+        name, 
+        email,
+        age,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: 'Something went wrong.',
+      });
+    }
+  }
+
   async getAll(req, res){
     try {
       const { userId } = req;
-      let customers = await Customer.findAll({
+      const customers = await Customer.findAll({
         where: {
           user_id: userId,
         },
       });
-
+  
       customers = customers.map(({
         id,
         name,
