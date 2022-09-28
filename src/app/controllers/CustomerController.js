@@ -2,7 +2,7 @@ import Customer from '../models/Customer';
 import * as Yup from 'yup';
 
 class CustomerController {
-  async store(req, res){
+  async store(req, res) {
     try {
       const schema = Yup.object().shape({
         name: Yup.string().required(),
@@ -15,7 +15,7 @@ class CustomerController {
     });
 
     const { name, email, age } = req.body;
-    const { userId } = req;
+    const { userId, firstName } = req;
 
     if(!userId) return res.status(400).json({
       message: 'User id is required.',
@@ -26,20 +26,21 @@ class CustomerController {
     });
 
     if(customerExists) return res.status(400).json({
-      message: 'There is already a customer registered with this email.',
+      message: `${firstName}, there is already a customer registered with this email.`,
     });
 
-    await Customer.create({
+    const customerCreated = await Customer.create({
       name,
       email,
       age,
       user_id: userId,
     });
 
-    res.status(201).json({ name, email });
+    if(customerCreated) return res.status(200).json({
+      message: `${firstName}, you registered a new customer.`,
+    });
 
     } catch (error) {
-      console.log('Erro: ' + error)
       res.status(500).json({
         message: 'Something went wrong.',
       });
@@ -82,6 +83,23 @@ class CustomerController {
 
       res.status(204).json();
 
+    } catch (error) {
+      res.status(500).json({
+        message: 'Something went wrong.',
+      });
+    }
+  }
+
+  async getOneById(req, res){
+    try {
+      const { id } = req.params;
+      const customer = await Customer.findByPk(id);
+
+      if(!customer) return res.status(404).json({
+        message: 'Customer not found.', 
+      });
+
+      res.status(200).json(customer);
     } catch (error) {
       res.status(500).json({
         message: 'Something went wrong.',
