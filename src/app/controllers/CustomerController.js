@@ -22,11 +22,14 @@ class CustomerController {
     });
 
     const customerExists = await Customer.findOne({
-      where: { email },
+      where: { 
+        email,
+        user_id: userId,
+      },
     });
 
     if(customerExists) return res.status(400).json({
-      message: `${firstName}, there is already a customer registered with this email.`,
+      message: `${firstName}, you have already registered a customer with this email.`,
     });
 
     const customerCreated = await Customer.create({
@@ -117,14 +120,17 @@ class CustomerController {
         message: 'Email is required.',
       });
 
+      const { userId, firstName } = req;
+
       const customer = await Customer.findOne({
         where: { 
+          user_id: userId,
           email: req.body.email,
         },
       });
 
       if(!customer) return res.status(404).json({
-        message: 'There is no customer registered with this email.',
+        message: `${firstName}, you have not registered a customer with this email.`,
       });
       
       const { name, email, age } = customer;
