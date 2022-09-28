@@ -37,7 +37,7 @@ class SessionController {
 
       const [ firstName ] = name.split(' '); 
 
-      return res.status(200).json({
+      res.status(200).json({
         token: jwt.sign(
           {
             id,
