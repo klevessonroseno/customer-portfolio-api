@@ -120,14 +120,17 @@ class CustomerController {
         message: 'Email is required.',
       });
 
+      const { userId, firstName } = req;
+
       const customer = await Customer.findOne({
         where: { 
+          user_id: userId,
           email: req.body.email,
         },
       });
 
       if(!customer) return res.status(404).json({
-        message: 'There is no customer registered with this email.',
+        message: `${firstName}, you have not registered a customer with this email.`,
       });
       
       const { name, email, age } = customer;
